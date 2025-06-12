@@ -1,0 +1,690 @@
+/* Reset y fuentes */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-attachment: fixed;
+    color: #2d3748;
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Header moderno con glassmorphism */
+header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo h1 {
+    font-weight: 800;
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+.logo h1::before {
+    content: "✈️";
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+}
+
+nav ul li a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* Container principal */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Secciones con glassmorphism mejorado */
+section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 3rem;
+    margin-top: 2rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    display: none;
+    animation: slideIn 0.6s ease;
+    position: relative;
+}
+
+section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+    border-radius: 24px 24px 0 0;
+}
+
+section.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.section-subtitle {
+    color: #718096;
+    font-weight: 400;
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Formularios modernos */
+form.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.select-wrapper {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+label {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+select,
+input[type="date"],
+input[type="number"],
+input[type="text"],
+input[type="email"] {
+    padding: 1.2rem 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    font-family: inherit;
+}
+
+select:focus,
+input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Botones con efectos modernos */
+button.search-btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+button.search-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+}
+
+button.search-btn:active {
+    transform: translateY(-1px);
+}
+
+button.reserve-btn {
+    background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+    display: none;
+    font-size: 1rem;
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+}
+
+button.reserve-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+}
+
+button.confirm-btn {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    grid-column: 1 / -1;
+    justify-self: center;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+}
+
+button.confirm-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+}
+
+/* Select mejorado */
+.flights-select {
+    width: 100%;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 1rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 3rem;
+}
+
+.flights-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Información del vuelo mejorada */
+.flight-info {
+    margin-top: 2rem;
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.flight-card {
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    padding: 2rem;
+    border-radius: 20px;
+    border-left: 6px solid #667eea;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.flight-card.selected {
+    border-left-color: #48bb78;
+    background: linear-gradient(135deg, #f0fff4, #e6fffa);
+}
+
+.flight-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+.flight-card h4 {
+    color: #2d3748;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.flight-card p {
+    margin: 0.5rem 0;
+    color: #4a5568;
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* Sección de reservas */
+.search-reservations {
+    display: flex;
+    gap: 2rem;
+    align-items: end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.reservations-container {
+    margin-top: 2rem;
+    min-height: 200px;
+    padding: 2rem;
+    background: #f7fafc;
+    border-radius: 16px;
+    border: 2px dashed #cbd5e0;
+}
+
+/* Formularios específicos */
+.booking-form,
+.profile-form,
+.register-form {
+    width: 100%;
+}
+
+/* Sección de Registro */
+.register-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.register-benefits {
+    background: linear-gradient(135deg, #f7fafc, #edf2f7);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.register-benefits::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 50%;
+    transform: translate(20px, -20px);
+}
+
+.register-benefits h3 {
+    color: #2d3748;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.benefits-list {
+    list-style: none;
+    space-y: 1rem;
+}
+
+.benefits-list li {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    color: #4a5568;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(203, 213, 224, 0.3);
+}
+
+.benefits-list li:last-child {
+    border-bottom: none;
+}
+
+.register-form-container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.register-btn {
+    background: linear-gradient(135deg, #48bb78, #38a169);
+    color: white;
+    font-weight: 600;
+    border: none;
+    padding: 1.2rem 3rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+    grid-column: 1 / -1;
+    justify-self: center;
+    box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.register-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(72, 187, 120, 0.4);
+}
+
+/* Términos y condiciones */
+.terms-container {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #4a5568;
+    line-height: 1.5;
+}
+
+.checkbox-container input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e0;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.checkbox-container input[type="checkbox"]:checked {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: #667eea;
+}
+
+.checkbox-container input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.terms-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.terms-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Redirección a login */
+.login-redirect {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}
+
+.login-redirect p {
+    color: #718096;
+    font-size: 0.95rem;
+}
+
+.login-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+/* Partículas decorativas */
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float-particle 20s infinite linear;
+}
+
+.particle:nth-child(1) {
+    width: 20px;
+    height: 20px;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+    width: 15px;
+    height: 15px;
+    left: 25%;
+    animation-delay: 5s;
+}
+
+.particle:nth-child(3) {
+    width: 25px;
+    height: 25px;
+    left: 50%;
+    animation-delay: 10s;
+}
+
+.particle:nth-child(4) {
+    width: 18px;
+    height: 18px;
+    left: 75%;
+    animation-delay: 15s;
+}
+
+.particle:nth-child(5) {
+    width: 22px;
+    height: 22px;
+    left: 85%;
+    animation-delay: 8s;
+}
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+
+    nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    nav ul li a {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    section {
+        padding: 2rem 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .search-reservations {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .register-benefits,
+    .register-form-container {
+        padding: 1.5rem;
+    }
+
+    .checkbox-container {
+        font-size: 0.8rem;
+        text-align: left;
+    }
+
+    button.search-btn,
+    button.confirm-btn,
+    button.register-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+}
