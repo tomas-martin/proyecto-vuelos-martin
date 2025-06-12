@@ -18,7 +18,8 @@ import org.hibernate.envers.Audited;
 @Audited
 public class Reserva extends Base {
     @Column(unique = true, nullable = false)
-    private String numeroReserva;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int numeroReserva;
 
     @ManyToOne
     @JoinColumn(name = "vuelo_id", nullable = false)

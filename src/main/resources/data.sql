@@ -29,9 +29,9 @@ INSERT INTO aviones (numero_avion, tipo_avion, tipo_turbina) VALUES
 ('SK-C789', 'Embraer 190', 'Turbofan');
 
 
-INSERT INTO vuelos (numero_vuelo, salida, origen_id, destino_id, aerolinea_id, avion_id) VALUES
-('AR123', '2025-06-11 10:00:00', 1, 2, 1, 1),
-('LA456', '2025-06-12 15:30:00', 3, 5, 2, 2),
-('SK789', '2025-06-13 20:45:00', 4, 1, 3, 3);
+INSERT INTO vuelos (salida, origen_id, destino_id, aerolinea_id, avion_id) VALUES
+('2025-06-11 10:00:00', 1, 2, 1, 1),
+('2025-06-12 15:30:00', 3, 5, 2, 2),
+('2025-06-13 20:45:00', 4, 1, 3, 3);
 
 

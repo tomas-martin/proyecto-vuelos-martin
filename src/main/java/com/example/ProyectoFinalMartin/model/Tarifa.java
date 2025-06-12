@@ -17,8 +17,6 @@ import org.hibernate.envers.Audited;
 @Audited
 public class Tarifa extends Base {
 
-    @Column(unique = true, nullable = false)
-    private String numeroTarifa;
 
     private double impuestoTarifa;
     private double precioTarifa;

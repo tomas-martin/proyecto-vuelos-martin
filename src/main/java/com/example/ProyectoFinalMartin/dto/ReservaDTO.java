@@ -11,10 +11,8 @@ public class ReservaDTO {
 
     // Datos del pago
     private Double pagoCantidad;
-    private String pagoNumero;
 
     // Datos de la reserva
-    private String reservaNumero;
     private Long vueloId;
 
     // Datos de la tarjeta
@@ -29,15 +27,13 @@ public class ReservaDTO {
 
     public ReservaDTO(Long personaDni, String personaNombre, String personaApellido,
                       String personaCorreo, Double pagoCantidad,
-                      String pagoNumero, String reservaNumero, Long vueloId,
+                      Long vueloId,
                       String tarjetaNumero, String tarjetaTipo, String tipoServicio) {
         this.personaDni = personaDni;
         this.personaNombre = personaNombre;
         this.personaApellido = personaApellido;
         this.personaCorreo = personaCorreo;
         this.pagoCantidad = pagoCantidad;
-        this.pagoNumero = pagoNumero;
-        this.reservaNumero = reservaNumero;
         this.vueloId = vueloId;
         this.tarjetaNumero = tarjetaNumero;
         this.tarjetaTipo = tarjetaTipo;
@@ -85,22 +81,6 @@ public class ReservaDTO {
         this.pagoCantidad = pagoCantidad;
     }
 
-    public String getPagoNumero() {
-        return pagoNumero;
-    }
-
-    public void setPagoNumero(String pagoNumero) {
-        this.pagoNumero = pagoNumero;
-    }
-
-    public String getReservaNumero() {
-        return reservaNumero;
-    }
-
-    public void setReservaNumero(String reservaNumero) {
-        this.reservaNumero = reservaNumero;
-    }
-
     public Long getVueloId() {
         return vueloId;
     }
@@ -118,7 +98,13 @@ public class ReservaDTO {
     }
 
     public TipoTarjeta getTarjetaTipo() {
-        return TipoTarjeta.valueOf(tarjetaTipo);
+        if (tarjetaTipo == null) return null;
+        try {
+            return TipoTarjeta.valueOf(tarjetaTipo.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            // Podés loguear el error aquí
+            return null; // o lanzar una excepción custom si preferís
+        }
     }
 
     public void setTarjetaTipo(String tarjetaTipo) {
@@ -141,8 +127,6 @@ public class ReservaDTO {
                 ", personaApellido='" + personaApellido + '\'' +
                 ", personaCorreo='" + personaCorreo + '\'' +
                 ", pagoCantidad=" + pagoCantidad +
-                ", pagoNumero='" + pagoNumero + '\'' +
-                ", reservaNumero='" + reservaNumero + '\'' +
                 ", vueloId=" + vueloId +
                 ", tarjetaNumero='" + tarjetaNumero + '\'' +
                 ", tarjetaTipo='" + tarjetaTipo + '\'' +

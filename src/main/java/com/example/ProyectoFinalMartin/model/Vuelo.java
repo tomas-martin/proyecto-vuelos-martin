@@ -25,8 +25,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Audited
 public class Vuelo extends Base {
-    @Column(unique = true, nullable = false)
-    private String numeroVuelo;
 
     @ManyToOne
     @JoinColumn(name = "origen_id", nullable = false)

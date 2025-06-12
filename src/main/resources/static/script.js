@@ -1,4 +1,5 @@
 let selectedFlight = null;
+let selectedFlightId = null;
 let allFlights = [];
 
 // Precios por tipo de servicio
@@ -152,25 +153,26 @@ document.addEventListener("DOMContentLoaded", () => {
             flightInfo.style.display = "none";
             reserveBtn.style.display = "none";
             selectedFlight = null;
+            selectedFlightId = null;
             document.getElementById("total-price").value = "";
         } else {
             selectedFlight = allFlights[selectedIndex];
+            selectedFlightId = selectedFlight.id;
 
             const origen = selectedFlight.origen.nombreCiudad;
             const destino = selectedFlight.destino.nombreCiudad;
 
             flightDetails.innerHTML = `
-        <strong>🛫 Origen:</strong> ${origen}<br>
-        <strong>🛬 Destino:</strong> ${destino}<br>
-        <strong>📅 Fecha:</strong> ${selectedFlight.salida || "N/A"}<br>
-        <strong>💺 Número de Vuelo:</strong> ${selectedFlight.numeroVuelo || selectedFlight.id}<br>
-        <strong>💲 Precio Base:</strong> $${selectedFlight.precio || "Consultar"}
-      `;
+            <strong>🛫 Origen:</strong> ${origen}<br>
+            <strong>🛬 Destino:</strong> ${destino}<br>
+            <strong>📅 Fecha:</strong> ${selectedFlight.salida || "N/A"}<br>
+            <strong>💺 Número de Vuelo:</strong> ${selectedFlight.id}<br>
+            <strong>💲 Precio Base:</strong> $${selectedFlight.precio || "Consultar"}
+        `;
 
             flightInfo.style.display = "block";
             reserveBtn.style.display = "block";
 
-            // Actualizar precio total con el servicio seleccionado si aplica
             updateTotalPrice();
         }
     });
@@ -206,42 +208,26 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Por favor selecciona un vuelo antes de reservar.");
             return;
         }
-
-        const numeroReserva = "RES-" + Date.now().toString().slice(-6);
         const serviceType = document.getElementById("service-type").value;
         const basePrice = selectedFlight.precio || 0;
         const servicePrice = servicePrices[serviceType] || 0;
         const totalPrice = basePrice + servicePrice;
+        const tarjetaInput = document.getElementById('card-number');
+        const tarjetaNumero = tarjetaInput ? tarjetaInput.value.replace(/\s/g, '') : "";
+
 
         const reservaCompleta = {
-            persona: {
-                dni: Number(document.getElementById("passenger-dni").value),
-                nombre: document.getElementById("passenger-name").value,
-                apellido: document.getElementById("passenger-lastname").value,
-                correo: document.getElementById("passenger-email").value,
-                numero_piloto: "NP-" + document.getElementById("passenger-dni").value,
-            },
-            pago: {
-                cantidad_pago: totalPrice,
-                numero_pago: "PAG-" + Date.now().toString().slice(-6),
-            },
-            reserva: {
-                numero_reserva: numeroReserva,
-                vuelo_id: selectedFlight.id,
-            },
-            tarjeta: {
-                numero_tarjeta: document.getElementById("card-number").value.replace(/\s/g, ""),
-                tipo_tarjeta: document.getElementById("card-type").value,
-                vuelo_id: selectedFlight.id,
-            },
-            detallesVuelo: {
-                numeroVuelo: selectedFlight.numeroVuelo || selectedFlight.id,
-                origen: selectedFlight.origen.nombreCiudad,
-                destino: selectedFlight.destino.nombreCiudad,
-                fechaVuelo: selectedFlight.salida,
-                tipoServicio: serviceType,
-            },
+            personaDni: Number(document.getElementById('passenger-dni').value),
+            personaNombre: document.getElementById('passenger-name').value.trim(),
+            personaApellido: document.getElementById('passenger-lastname').value.trim(),
+            personaCorreo: document.getElementById('passenger-email').value.trim(),
+            vueloId: Number(selectedFlightId),
+            pagoCantidad: Number(totalPrice),
+            tarjetaNumero: tarjetaNumero,
+            tarjetaTipo: document.getElementById('card-type').value,
+            tipoServicio: serviceType,
         };
+
 
         try {
             console.log("Enviando reserva completa:", reservaCompleta);
@@ -249,10 +235,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch("http://localhost:9000/reservas/crear", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json;charset=UTF-8",
                 },
                 body: JSON.stringify(reservaCompleta),
             });
+
 
             if (response.ok) {
                 const result = await response.json();
@@ -260,16 +247,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 alert(
                     `¡Reserva confirmada!\n` +
-                    `Número de reserva: ${numeroReserva}\n` +
-                    `Pasajero: ${reservaCompleta.persona.nombre} ${reservaCompleta.persona.apellido}\n` +
-                    `DNI: ${reservaCompleta.persona.dni}\n` +
+                    `Pasajero: ${reservaCompleta.personaNombre} ${reservaCompleta.personaApellido}\n` +
+                    `DNI: ${reservaCompleta.personaDni}\n` +
                     `Total pagado: $${totalPrice}\n` +
                     `Tipo de servicio: ${serviceType}\n` +
-                    `Tarjeta: **** **** **** ${reservaCompleta.tarjeta.numero_tarjeta.slice(-4)}`
+                    `Tarjeta: **** **** **** ${reservaCompleta.tarjetaNumero.slice(-4)}`
                 );
 
                 bookingForm.reset();
                 showSection("reservations");
+                loadReservations();
             } else {
                 const errorText = await response.text();
                 console.error("Error del servidor:", errorText);
@@ -281,106 +268,64 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    document.addEventListener("DOMContentLoaded", () => {
-        async function loadReservations() {
-            const dniInput = document.getElementById("usuario-id");
-            const reservationsList = document.getElementById("reservations-list");
-            const dni = dniInput.value.trim();
+    async function loadReservations() {
+        const dniInput = document.getElementById("usuario-id");
+        const reservationsList = document.getElementById("reservations-list");
+        const dni = dniInput.value.trim();
 
-            if (!dni) {
-                reservationsList.innerHTML = '<p style="color: red;">Por favor ingresa un DNI.</p>';
-                return;
-            }
-
-            reservationsList.innerHTML = "<p>Cargando reservas...</p>";
-
-            try {
-                const response = await fetch(`http://localhost:9000/personas/dni/${dni}`, {
-                    method: "GET",
-                    headers: {Accept: "application/json"},
-                });
-
-                if (response.ok) {
-                    const persona = await response.json();
-
-                    if (persona && persona.reservas && persona.reservas.length > 0) {
-                        let reservasHtml = `
-                        <div style="margin-bottom: 20px; padding: 15px; background-color: #f0f8ff; border-radius: 8px;">
-                          <h3>👤 Datos del Pasajero</h3>
-                          <p><strong>Nombre:</strong> ${persona.nombre} ${persona.apellido}</p>
-                          <p><strong>DNI:</strong> ${persona.dni}</p>
-                          <p><strong>Email:</strong> ${persona.correo}</p>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                          <h3>✈️ Reservas Encontradas (${persona.reservas.length})</h3>
-                        </div>
-                    `;
-
-                        persona.reservas.forEach((reserva) => {
-                            reservasHtml += `
-                            <div style="border: 1px solid #ddd; margin-bottom: 15px; padding: 15px; border-radius: 8px; background-color: #fafafa;">
-                                <h4 style="color: #2196F3; margin-top: 0;">Reserva #${reserva.numeroReserva}</h4>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                    <div>
-                                        <p><strong>🛫 Origen:</strong> ${reserva.origen}</p>
-                                        <p><strong>🛬 Destino:</strong> ${reserva.destino}</p>
-                                        <p><strong>📅 Fecha Vuelo:</strong> ${reserva.fechaVuelo}</p>
-                                        <p><strong>💺 Número de Vuelo:</strong> ${reserva.numeroVuelo}</p>
-                                    </div>
-                                    <div>
-                                        <p><strong>💲 Precio:</strong> $${reserva.precio}</p>
-                                        <p><strong>🎫 Tipo Servicio:</strong> ${reserva.tipoServicio}</p>
-                                        <p><strong>💳 Tarjeta:</strong> **** **** **** ${reserva.tarjeta?.numero_tarjeta?.slice(-4) || "N/A"}</p>
-                                        <p><strong>🏷️ Tipo Tarjeta:</strong> ${reserva.tarjeta?.tipo_tarjeta || "N/A"}</p>
-                                        <p><strong>📝 Fecha Reserva:</strong> ${new Date(reserva.fechaReserva).toLocaleDateString()}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                        });
-
-                        reservationsList.innerHTML = reservasHtml;
-                    } else {
-                        reservationsList.innerHTML = `
-                        <div style="text-align: center; padding: 20px;">
-                            <p>📋 No se encontraron reservas para el DNI: <strong>${dni}</strong></p>
-                            <p style="color: #666;">Esta persona no tiene reservas registradas.</p>
-                        </div>
-                    `;
-                    }
-                } else if (response.status === 404) {
-                    reservationsList.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <p style="color: red;">❌ No se encontró ninguna persona con el DNI: <strong>${dni}</strong></p>
-                        <p style="color: #666;">Verifica que el DNI sea correcto.</p>
-                    </div>
-                `;
-                } else {
-                    throw new Error(`Error del servidor: ${response.status}`);
-                }
-            } catch (error) {
-                console.error("Error al cargar reservas:", error);
-                reservationsList.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <p style="color: red;">⚠️ Error al conectar con el servidor</p>
-                    <p style="color: #666;">${error.message}</p>
-                </div>
-            `;
-            }
+        if (!dni) {
+            reservationsList.innerHTML = '<p style="color: red;">Por favor ingresa un DNI.</p>';
+            return;
         }
 
-        const searchReservationsBtn = document.getElementById("search-reservations-btn");
-        if (searchReservationsBtn) {
-            searchReservationsBtn.addEventListener("click", loadReservations);
-        }
+        reservationsList.innerHTML = "<p>Cargando reservas...</p>";
 
-        const usuarioIdInput = document.getElementById("usuario-id");
-        if (usuarioIdInput) {
-            usuarioIdInput.addEventListener("keypress", (e) => {
-                if (e.key === "Enter") {
-                    loadReservations();
-                }
+        try {
+            const response = await fetch(`http://localhost:9000/personas/dni/${dni}`, {
+                method: "GET",
+                headers: { Accept: "application/json" },
             });
+
+            if (response.ok) {
+                const persona = await response.json();
+
+                if (persona && persona.reservas && persona.reservas.length > 0) {
+                    let reservasHtml = `
+                    <div style="margin-bottom: 20px;">
+                        <strong>Nombre:</strong> ${persona.nombre} ${persona.apellido} <br>
+                        <strong>DNI:</strong> ${persona.dni} <br>
+                        <strong>Correo:</strong> ${persona.correo} <br>
+                    </div>
+                    <h3>Reservas encontradas:</h3>
+                    `;
+
+                    persona.reservas.forEach((reserva) => {
+                        reservasHtml += `
+                        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+                          <strong>Vuelo:</strong> ${reserva.vuelo_id} <br>
+                          <strong>Fecha:</strong> ${reserva.fecha_reserva || "N/D"} <br>
+                          <strong>Precio:</strong> $${reserva.precio || "N/D"} <br>
+                          <strong>Tipo de servicio:</strong> ${reserva.tipo_servicio || "N/D"}
+                        </div>
+                      `;
+                    });
+
+                    reservationsList.innerHTML = reservasHtml;
+                } else {
+                    reservationsList.innerHTML = "<p>No se encontraron reservas para este DNI.</p>";
+                }
+            } else {
+                throw new Error(`Error al obtener reservas: ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Error al cargar reservas:", error);
+            reservationsList.innerHTML = `<p>Error al cargar reservas: ${error.message}</p>`;
         }
-    });
+    }
+    window.loadReservations = loadReservations;
+    const consultarBtn = document.getElementById("consultar-reservas-btn");
+    if (consultarBtn) {
+        consultarBtn.addEventListener("click", loadReservations);
+    }
+
 });

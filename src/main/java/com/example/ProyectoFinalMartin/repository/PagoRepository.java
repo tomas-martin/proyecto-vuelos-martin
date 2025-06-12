@@ -10,9 +10,4 @@ import java.util.Optional;
 @Repository
 public interface PagoRepository extends BaseRepository<Pago, Long> {
 
-    @Query("SELECT p FROM Pago p WHERE p.reserva.id = :reservaId")
-    Optional<Pago> findByReservaId(@Param("reservaId") Long reservaId);
-
-    @Query("SELECT p FROM Pago p WHERE p.numeroPago = :numero")
-    Optional<Pago> findByNumeroPago(@Param("numero") String numeroPago);
 }

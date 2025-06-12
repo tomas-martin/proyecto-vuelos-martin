@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface PersonaRepository extends BaseRepository<Persona, Long> {
     Persona findByDni(Long dni);
 
-    @Query("SELECT p FROM Persona p WHERE p.dni = :dni")
-    Optional<Persona> findPersonaByDni(@Param("dni") Long dni);
+    @Query("SELECT p FROM Persona p LEFT JOIN FETCH p.reservas WHERE p.dni = :dni")
+    Optional<Persona> findByDniWithReservas(@Param("dni") Long dni);
+
 }
 

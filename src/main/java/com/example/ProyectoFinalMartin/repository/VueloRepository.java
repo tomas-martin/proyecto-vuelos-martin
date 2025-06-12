@@ -13,8 +13,6 @@ import java.util.List;
 @Repository
 public interface VueloRepository extends BaseRepository<Vuelo, Long> {
 
-    List<Vuelo> findByNumeroVuelo(String numeroVuelo);
-
     @Query("SELECT v FROM Vuelo v WHERE v.salida BETWEEN :inicio AND :fin")
     List<Vuelo> findByRangoFechas(
             @Param("inicio") LocalDateTime inicio,

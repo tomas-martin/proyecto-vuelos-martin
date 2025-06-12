@@ -19,7 +19,7 @@ public class ReservaController extends BaseControllerImpl<Reserva, ReservaServic
         super(servicio);
     }
 
-    @PostMapping(value = "/crear", consumes = "application/json;charset=UTF-8", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "crear", consumes = "application/json;charset=UTF-8", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> crearReserva(@RequestBody ReservaDTO reservaDTO) {
         try {
             Reserva nuevaReserva = servicio.crearReservaCompleta(reservaDTO);
@@ -70,15 +70,12 @@ public class ReservaController extends BaseControllerImpl<Reserva, ReservaServic
         if (map.containsKey("pago")) {
             @SuppressWarnings("unchecked")
             Map<String, Object> pagoMap = (Map<String, Object>) map.get("pago");
-            dto.setPagoCantidad(((Number) pagoMap.get("cantidad_pago")).doubleValue());
-            dto.setPagoNumero((String) pagoMap.get("numero_pago"));
-        }
+            dto.setPagoCantidad(((Number) pagoMap.get("cantidad_pago")).doubleValue());}
 
         // Extraer datos de reserva
         if (map.containsKey("reserva")) {
             @SuppressWarnings("unchecked")
             Map<String, Object> reservaMap = (Map<String, Object>) map.get("reserva");
-            dto.setReservaNumero((String) reservaMap.get("numero_reserva"));
             dto.setVueloId(((Number) reservaMap.get("vuelo_id")).longValue());
         }
 

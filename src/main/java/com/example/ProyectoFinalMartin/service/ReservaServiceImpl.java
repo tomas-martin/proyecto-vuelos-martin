@@ -31,47 +31,6 @@ public class ReservaServiceImpl extends BaseServiceImpl<Reserva, Long> implement
         super(reservaRepository);
         this.reservaRepository = reservaRepository;
     }
-
-    @Transactional
-    public Reserva crearReservaCompleta(ReservaDTO reservaDTO) throws Exception {
-        try {
-            // 1. Buscar o crear la persona
-            Persona persona = buscarOCrearPersona(reservaDTO);
-
-            // 2. Buscar el vuelo
-            Vuelo vuelo = vueloService.findById(reservaDTO.getVueloId());
-            if (vuelo == null) {
-                throw new Exception("No se encontró el vuelo con ID: " + reservaDTO.getVueloId());
-            }
-
-            // 3. Crear el pago
-            Pago pago = new Pago();
-            pago.setCantidadPago(reservaDTO.getPagoCantidad());
-            pago.setNumeroPago(reservaDTO.getPagoNumero());
-            pago = pagoService.save(pago);
-
-            // 4. Crear la reserva
-            Reserva reserva = new Reserva();
-            reserva.setNumeroReserva(reservaDTO.getReservaNumero());
-            reserva.setPersona(persona);
-            reserva.setPago(pago);
-            reserva.setVuelo(vuelo);
-            reserva = save(reserva);
-
-            // 5. Crear la tarjeta
-            Tarjeta tarjeta = new Tarjeta();
-            tarjeta.setNumeroTarjeta(reservaDTO.getTarjetaNumero());
-            tarjeta.setTipoTarjeta(reservaDTO.getTarjetaTipo());
-            tarjeta.setPersona(persona); // Asumo que la tarjeta está relacionada con la persona
-            tarjetaService.save(tarjeta);
-
-            return reserva;
-
-        } catch (Exception e) {
-            throw new Exception("Error al crear la reserva completa: " + e.getMessage(), e);
-        }
-    }
-
     private Persona buscarOCrearPersona(ReservaDTO reservaDTO) throws Exception {
         try {
             // Buscar si ya existe una persona con ese DNI
@@ -93,6 +52,47 @@ public class ReservaServiceImpl extends BaseServiceImpl<Reserva, Long> implement
             throw new Exception("Error al buscar o crear la persona: " + e.getMessage(), e);
         }
     }
+    @Transactional
+    public Reserva crearReservaCompleta(ReservaDTO reservaDTO) throws Exception {
+        try {
+            // 1. Buscar o crear la persona
+            Persona persona = buscarOCrearPersona(reservaDTO);
+
+            // 2. Buscar el vuelo
+            Vuelo vuelo = vueloService.findById(reservaDTO.getVueloId());
+            if (vuelo == null) {
+                throw new Exception("No se encontró el vuelo con ID: " + reservaDTO.getVueloId());
+            }
+
+            // 3. Crear el pago
+            Pago pago = new Pago();
+            pago.setCantidadPago(reservaDTO.getPagoCantidad());
+            pago = pagoService.save(pago);
+
+            // 4. Crear la reserva
+            Reserva reserva = new Reserva();
+            reserva.setPersona(persona);
+            reserva.setPago(pago);
+            reserva.setVuelo(vuelo);
+            reserva.setNumeroReserva(reserva.getNumeroReserva());
+
+            reserva = save(reserva);
+
+
+            // 5. Crear la tarjeta
+            Tarjeta tarjeta = new Tarjeta();
+            tarjeta.setNumeroTarjeta(reservaDTO.getTarjetaNumero());
+            tarjeta.setTipoTarjeta(reservaDTO.getTarjetaTipo());
+            tarjeta.setPersona(persona);
+            tarjetaService.save(tarjeta);
+
+            return reserva;
+
+        } catch (Exception e) {
+            throw new Exception("Error al crear la reserva completa: " + e.getMessage(), e);
+        }
+    }
+
 
     // Método para buscar reservas por DNI de persona
     public Persona findPersonaWithReservasByDni(Long dni) throws Exception {

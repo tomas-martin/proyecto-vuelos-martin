@@ -17,8 +17,8 @@ public class PersonaServiceImpl extends BaseServiceImpl<Persona, Long> implement
             this.personaRepository = personaRepository;
         }
 
-        public Persona findByDni(Long dni) {
-            return personaRepository.findByDni(dni);
-        }
+    public Persona findByDni(Long dni) {
+        return personaRepository.findByDniWithReservas(dni).orElse(null);
+    }
     }
 
