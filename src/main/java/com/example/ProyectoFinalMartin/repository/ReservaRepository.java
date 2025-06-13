@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface ReservaRepository extends BaseRepository<Reserva, Long> {
-
+    boolean existsByNumeroReserva(int numeroReserva);
     @Query("SELECT r FROM Reserva r WHERE r.persona.id = :personaId")
     List<Reserva> findByPersonaId(@Param("personaId") Long personaId);
 

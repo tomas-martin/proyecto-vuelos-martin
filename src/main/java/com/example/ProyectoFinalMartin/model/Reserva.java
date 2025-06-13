@@ -17,8 +17,7 @@ import org.hibernate.envers.Audited;
 @AllArgsConstructor
 @Audited
 public class Reserva extends Base {
-    @Column(unique = true, nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private int numeroReserva;
 
     @ManyToOne

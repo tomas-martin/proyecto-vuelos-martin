@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ReservaServiceImpl extends BaseServiceImpl<Reserva, Long> implements ReservaService {
@@ -74,7 +75,7 @@ public class ReservaServiceImpl extends BaseServiceImpl<Reserva, Long> implement
             reserva.setPersona(persona);
             reserva.setPago(pago);
             reserva.setVuelo(vuelo);
-            reserva.setNumeroReserva(reserva.getNumeroReserva());
+            reserva.setNumeroReserva(generarNumeroReservaUnico());
 
             reserva = save(reserva);
 
@@ -93,7 +94,13 @@ public class ReservaServiceImpl extends BaseServiceImpl<Reserva, Long> implement
         }
     }
 
-
+    private int generarNumeroReservaUnico() {
+        int numero;
+        do {
+            numero = (int) (Math.random() * 1_000_000);
+        } while (reservaRepository.existsByNumeroReserva(numero));
+        return numero;
+    }
     // Método para buscar reservas por DNI de persona
     public Persona findPersonaWithReservasByDni(Long dni) throws Exception {
         Optional<Persona> persona = Optional.ofNullable(personaService.findByDni(dni));
