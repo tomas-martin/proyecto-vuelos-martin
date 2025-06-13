@@ -333,53 +333,36 @@ document.addEventListener("DOMContentLoaded", () => {
                     <strong>Correo:</strong> ${persona.correo} <br>
                 </div>
                 <h3>✈️ Reservas Encontradas:</h3>
-                `;
+`;
 
                     persona.reservas.forEach((reserva, index) => {
-                        // Extraer información del vuelo si está disponible
                         const vueloInfo = reserva.vuelo || {};
                         const origen = vueloInfo.origen?.nombreCiudad || 'No disponible';
                         const destino = vueloInfo.destino?.nombreCiudad || 'No disponible';
                         const fechaSalida = vueloInfo.salida || 'No disponible';
 
-                        // Calcular precio total usando los precios del servicio
-                        const servicePrices = {
-                            BUSINESS: 1500,
-                            TURISTA: 800,
-                            ECONOMY: 500,
-                        };
-
-                        const tipoServicio = reserva.tipoServicio || 'N/D';
-                        const precioServicio = servicePrices[tipoServicio] || 0;
                         const precioBase = reserva.vuelo?.precio || 0;
-                        const precioTotal = precioBase + precioServicio;
+                        const cantidadPagada = reserva.pago?.cantidadPago || reserva.pago?.cantidad || precioBase;
 
-                        // Mostrar precio desglosado si hay servicio definido
-                        let precioDisplay = '';
-                        if (tipoServicio !== 'N/D' && precioServicio > 0) {
-                            precioDisplay = `${precioTotal} (Base: ${precioBase} + ${tipoServicio}: ${precioServicio})`;
-                        } else {
-                            precioDisplay = `${reserva.pago?.cantidad || precioTotal || 'N/D'}`;
-                        }
+                        const precioDisplay = `$${cantidadPagada}`;
 
                         reservasHtml += `
-                    <div style="border: 2px solid #007bff; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f9fa;">
-                        <h4>🎫 Reserva #${index + 1}</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <div>
-                                <strong>🛫 Origen:</strong> ${origen}<br>
-                                <strong>🛬 Destino:</strong> ${destino}<br>
-                                <strong>📅 Salida:</strong> ${fechaSalida}<br>
-                            </div>
-                            <div>
-                                <strong>💺 Vuelo ID:</strong> ${reserva.vuelo?.id || reserva.vueloId || 'N/D'}<br>
-                                <strong>💰 Precio Total:</strong> ${precioDisplay}<br>
-                                <strong>🎭 Tipo de Servicio:</strong> ${tipoServicio}<br>
-                            </div>
-                        </div>
-                        ${reserva.pago?.tarjeta ? `<div style="margin-top: 10px;"><strong>💳 Tarjeta:</strong> **** **** **** ${String(reserva.pago.tarjeta.numeroReserva || '').slice(-4)}</div>` : ''}
-                    </div>
-                    `;
+<div style="border: 2px solid #007bff; padding: 15px; margin-bottom: 15px; border-radius: 8px; background-color: #f8f9fa;">
+    <h4>🎫 Reserva #${index + 1}</h4>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div>
+            <strong>🛫 Origen:</strong> ${origen}<br>
+            <strong>🛬 Destino:</strong> ${destino}<br>
+            <strong>📅 Salida:</strong> ${fechaSalida}<br>
+        </div>
+        <div>
+            <strong>💺 Vuelo ID:</strong> ${reserva.vuelo?.id || reserva.vueloId || 'N/D'}<br>
+            <strong>💰 Precio Total:</strong> ${precioDisplay}<br>
+        </div>
+    </div>
+                        ${reserva.pago?.tarjeta ? `<div style="margin-top: 10px;"><strong>💳 Tarjeta:</strong> **** **** **** ${String(reserva.pago.tarjeta.numero || reserva.pago.tarjeta.numeroTarjeta || '').slice(-4)}</div>` : ''}
+    </div>
+    `;
                     });
 
                     reservationsList.innerHTML = reservasHtml;
